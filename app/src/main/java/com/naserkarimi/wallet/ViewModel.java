@@ -30,17 +30,6 @@ public class ViewModel {
 
     }
 
-    //    @SuppressLint("CheckResult")
-//    public static void getAddress(String address, Consumer<? super Object> onNext, Consumer<? super Throwable> onError) {
-//        AddressService addressService = RetrofitHandler.getInstance().getRetrofit().create(AddressService.class);
-//
-//        Observable<Address> addressObservable = addressService.getAddress(address);
-//        addressObservable.subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .map(result -> result)
-//                .subscribe(onNext, onError);
-//
-//    }
     @SuppressLint("CheckResult")
     public void getAddress(List<String> address, DisposableObserver<Address> addressObserver) {
         AddressService addressService = RetrofitHandler.getInstance().getRetrofit().create(AddressService.class);
@@ -52,12 +41,6 @@ public class ViewModel {
                 .flatMap(strindAddress -> addressService.getAddress(strindAddress))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(addressObserver);
-
-//    Observable<Address> addressObservable = addressService.getAddress(address);
-//    addressObservable.subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .map(result -> result)
-//            .subscribeWith(addressObserver);
 
     }
 }

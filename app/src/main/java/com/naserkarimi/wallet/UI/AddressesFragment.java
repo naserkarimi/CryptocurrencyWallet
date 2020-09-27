@@ -1,4 +1,4 @@
-package com.naserkarimi.wallet;
+package com.naserkarimi.wallet.UI;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.naserkarimi.wallet.R;
+import com.naserkarimi.wallet.ViewModel;
 import com.naserkarimi.wallet.pojo.Address;
+import com.naserkarimi.wallet.util.ConvertorUtil;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class AddressesFragment extends Fragment {
     private void iniUI() {
         recyclerView = view.findViewById(R.id.recyclerViewAddress);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        addressAdapter = new AddressAdapter();
+        addressAdapter = new AddressAdapter(getActivity());
         recyclerView.setAdapter(addressAdapter);
 
         total = view.findViewById(R.id.total_balance_all);
@@ -87,6 +89,8 @@ public class AddressesFragment extends Fragment {
             public void onError(Throwable e) {
                 Toast.makeText(getContext(), "ERROR IN FETCHING API RESPONSE. Try again",
                         Toast.LENGTH_LONG).show();
+                if (swipeContainer.isRefreshing())
+                    swipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -94,7 +98,7 @@ public class AddressesFragment extends Fragment {
                 if (total_satoshi == 0) {
                     total.setText("0");
                 } else {
-                    BigDecimal btc = new BigDecimal(total_satoshi).movePointLeft(8);
+                    String btc = ConvertorUtil.getBitcoinFromSatoshi((long) total_satoshi);
                     total.setText(btc.toString());
                 }
                 if (swipeContainer.isRefreshing())
